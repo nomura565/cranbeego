@@ -1,0 +1,75 @@
+mixin large-submit-button(_id,_text="")
+    button(type="button" class="ui fluid large teal submit button" name=`${_id}` id=`${_id}`) !{_text}
+
+mixin checkbox(_id,_text="")
+    div(class="ui left checkbox input")
+        input(type="checkbox" name=`${_id}` id=`${_id}` class="hidden")
+        label(for=`${_id}`) !{_text}
+
+mixin inputText(_id,_text="")
+    input(type="text" name=`${_id}` id=`${_id}` value=`${_text}`)
+
+mixin inputPassword(_id,_text="")
+    input(type="password" name=`${_id}` id=`${_id}` value=`${_text}`)
+
+mixin inputHidden(_id,_text="")
+    input(type="hidden" name=`${_id}` id=`${_id}` value=`${_text}`)
+
+mixin icon(_addClass)
+    - var addClass = "icon " + _addClass
+    i(class=`${addClass}`)
+    if block
+        block
+
+mixin field()
+    div(class="field")
+        if block
+            block
+
+mixin column()
+    div(class="column")
+        if block
+            block
+
+mixin leftIconInput()
+    div(class="ui left icon input")
+        if block
+            block
+
+mixin form(_addClass, _id="form1")
+    - var addClass = "ui form " + _addClass
+    form(id=`${_id}` class=`${addClass}`)
+        if block
+            block
+
+mixin img(_src, _addClass="")
+    - var src = "{{.config.ImageFolder}}" + _src
+    - var addClass = " " + _addClass
+    img(src=`${src}` class=`${addClass}`)
+
+mixin rating(_color, _icon, _rating, _max)
+    - var color = "ui rating " + _color
+    div(class=`${color}` data-icon=`${_icon}` data-rating=`${_rating}` data-max-rating=`${_max}`)
+
+mixin button(_id,_addClass="")
+    - var addClass = "ui button " + _addClass
+    button(name=`${_id}` id=`${_id}` class=`${addClass}`)
+        if block
+            block
+
+mixin requireField(_id,_text,_value)
+    div(class="field")
+        div(class="ui labeled input")
+            label(class="ui label" for=`${_id}`) !{_text}
+            div(class="ui left corner labeled input")
+                +inputText(`${_id}`, `${_value}`)
+                div(class="ui right corner label")
+                    +icon("asterisk")
+                        if block
+                            block
+
+mixin iconButton(_id,_addClass,_iconAddClass,_text)
+    +button(`${_id}`, `${_addClass}`)
+        +icon(`${_iconAddClass}`) !{_text}
+            if block
+                block

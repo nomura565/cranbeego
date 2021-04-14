@@ -1,0 +1,52 @@
+body {
+    background-color: #DADADA;
+
+    & > .grid {
+        height: 100%;
+    }
+}
+
+.image {
+    margin-top: -100px;
+}
+
+.title {
+    font-size: 2.75em;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.column {
+    max-width: 450px;
+}
+
+.ui {
+    &.header > .image:not(.icon), &.header > img {
+        width: 17em;
+    }
+
+    &.inverted.dimmer {
+        background-color: transparent;
+    }
+
+    &.error.message {
+        max-width: 420px;
+    }
+
+    &.checkbox input.hidden+label {
+        text-align: left;
+    }
+}
+
+/*スマホ用の記述*/
+@media screen and (max-width: 480px) {
+    .ui {
+        &.header > .image:not(.icon), &.header > img {
+            width: 14em;
+        }
+
+        &.menu .dropdown.item .menu {
+            margin-right: 20px;
+        }
+    }
+}

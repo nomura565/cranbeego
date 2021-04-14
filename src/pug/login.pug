@@ -1,0 +1,31 @@
+extends ./common/layoutLogin.pug
+
+block vars
+    - var Title = "ログイン"
+    - var cssHref = "login.css"
+    - var jsSrc = "login.js"
+
+block main-contents
+    div(class="ui middle aligned center aligned grid")
+        +column()
+            h2(class="ui teal image header")
+                div()
+                    span(class="title") cranberry
+                div(class="content")
+                    | Log-in to your account
+            +form("large")
+                div(class="ui stacked segment")
+                    +field()
+                        +leftIconInput()
+                            +icon("user")
+                            +inputText("LoginCode")
+                    +field()
+                        +leftIconInput()
+                            +icon("lock")
+                            +inputPassword("Password")
+                    +field()
+                        +checkbox("NextUseLoginCode", "次回もこのユーザIDを使用する")
+                    +large-submit-button("LoginBtn", "ログイン")
+                include ./common/validationSummary.pug
+
+

@@ -1,0 +1,10 @@
+.ag-grid {
+    height: 350px;
+}
+
+/*スマホ用の記述*/
+@media screen and (max-width: 480px) {
+    .ag-grid {
+        height: 360px;
+    }
+}

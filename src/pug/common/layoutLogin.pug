@@ -1,0 +1,12 @@
+include mixin.pug
+doctype html
+html(lang='ja')
+    block vars
+    include head.pug
+
+    body
+
+        block main-contents
+        +inputHidden("ModelErrors", "{{.modelErrors}}")
+        include script.pug
+        include modal.pug

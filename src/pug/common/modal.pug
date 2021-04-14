@@ -1,0 +1,26 @@
+include mixin.pug
+div(id="loader" class="ui active inverted dimmer")
+    div(class="ui medium text loader")
+
+div(id="confirm-modal" class="ui basic mini modal")
+    div(class="ui icon tiny header")
+        +icon("question")
+    div(class="content")
+        p()
+    div(class="actions")
+        div(class="ui red basic cancel inverted button")
+            +icon("remove")
+            | いいえ
+        div(class="ui green ok inverted button")
+            +icon("checkmark")
+            | はい
+
+div(id="info-modal" class="ui basic mini modal")
+    div(class="ui icon tiny header")
+        +icon("info circle")
+    div(class="content")
+        p()
+    div(class="actions")
+        div(class="ui green ok inverted button")
+            +icon("checkmark")
+            | OK

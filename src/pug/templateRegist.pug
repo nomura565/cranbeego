@@ -1,0 +1,25 @@
+extends ./common/layout.pug
+
+block vars
+    - var Title = "登録系テンプレート"
+    - var cssHref = "templateRegist.css"
+    - var jsSrc = "templateRegist.js"
+
+block main-contents
+    +form("")
+        h4(class="ui dividing header") ロールマスタ
+        div(class="ui grid")
+            div(class="ten wide column")
+                div(class="two fields")
+                    +requireField("RoleName", "ロール名", "{{.role.RoleName}}")
+                    +requireField("RoleDescription", "ロール説明", "{{.role.RoleDescription}}")
+        +inputHidden("RoleId", "{{.role.RoleId}}")
+        +inputHidden("RowVersion", "{{.role.RowVersion}}")
+
+block footer-contents
+    div(class="ui item right")
+        +iconButton("CancelBtn", "", "red dont", "キャンセル")
+        +iconButton("RegistBtn", "positive", "edit", "登録")
+
+
+

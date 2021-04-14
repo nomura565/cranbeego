@@ -1,0 +1,38 @@
+{
+    "title": "サイト名",
+    "baseURL": "https://www.hogehoge.com",
+    "baseDir": "src",
+    "distDir": "static",
+    "jsDir": "js",
+    "cssDir": "css",
+    "agGrid_contains":"を含む",
+    "agGrid_endsWith":"で終わる",
+    "agGrid_equals":"と等しい",
+    "agGrid_filterOoo":"フィルタ...",
+    "agGrid_greaterThan":"より大きい",
+    "agGrid_greaterThanOrEqual":"以上",
+    "agGrid_inRange":"範囲",
+    "agGrid_lessThan":"より少ない",
+    "agGrid_lessThanOrEqual":"以下",
+    "agGrid_noRowsToShow":" ",
+    "agGrid_notContains":"を含まない",
+    "agGrid_notEqual":"と等しくない",
+    "agGrid_startsWith":"で始まる",
+    "requestParameter": {
+        "isValid": "isValid",
+        "data": "data",
+        "validationSummary": "validationSummary"
+    },
+    "routingURL": {
+        "login": "/Login",
+        "doLogout": "/Login/DoLogout",
+        "doLogin": "/Login/DoLogin",
+        "top": "/Top",
+        "templateList": "/TemplateList",
+        "getRoleMaster": "/TemplateList/GetRoleMaster",
+        "templateListDoDelete": "/TemplateList/DoDelete",
+        "templateRegist": "/TemplateRegist",
+        "templateRegistDoRegist": "/TemplateRegist/DoRegist"
+    },
+    "imageFolder": "/static/img/"
+}

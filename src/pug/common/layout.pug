@@ -1,0 +1,49 @@
+include mixin.pug
+doctype html
+html(lang='ja')
+    block vars
+    include head.pug
+
+    body
+        div(class="ui sidebar inverted disabled vertical menu")
+            a(class="header item" href="{{.config.RoutingURL.top}}")
+                +icon("big home")
+            div(class="item")
+                div(class="header") テンプレート
+                div(class="menu")
+                    a(class="item" href="{{.config.RoutingURL.templateList}}") 一覧系テンプレート
+                    a(class="item" href="{{.config.RoutingURL.templateRegist}}") 登録系テンプレート
+        div(class="pusher")
+            div(class="ui fixed inverted menu fixed-header")
+                div(class="ui container")
+                    a(href="#" class="header item open button")
+                        div(class="ui icon")
+                            +icon("large sidebar")
+                    div(class="right menu")
+                        div(class="ui dropdown item login-info")
+                            div(class="text")
+                                +icon("user circle")
+                                span {{.userInfo.UserName}}
+                            +icon("dropdown")
+                            div(class="menu")
+                                div(class="ui card")
+                                    div(class="ui image small")
+                                        +img("{{.userInfo.PhotoImage}}")
+                                    div(class="content")
+                                        a(class="header") {{.userInfo.UserName}}
+                                        div(class="meta")
+                                            span(class="date") {{.userInfo.RoleName}}
+                                        div(class="description") {{.userInfo.Organization}}
+                                div(class="item")
+                                    div(id="LogoutBtn" class="ui vertical negative fluid button" tabindex="0")
+                                        +icon("logout")
+                                        | ログアウト
+
+            div(class="ui main container")
+                include validationSummary.pug
+                block main-contents
+                +inputHidden("ModelErrors", "{{.modelErrors}}")
+            div(class="ui bottom fixed menu fixed-footer")
+                block footer-contents
+        include script.pug
+        include modal.pug

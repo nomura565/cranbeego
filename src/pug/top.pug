@@ -1,0 +1,73 @@
+extends ./common/layout.pug
+
+block vars
+    - var Title = "トップ"
+    - var cssHref = "top.css"
+    - var jsSrc = "top.js"
+
+block main-contents
+    h4(class="ui dividing header") 通知情報
+    div(class="ui styled accordion")
+        div(class="active title")
+            +icon("dropdown")
+            +icon("inverted red announcement")
+            | 対応ブラウザ
+        div(class="active content")
+            p(class="transition")
+                +icon("chrome big")
+                | chrome
+                +icon("firefox big")
+                | firefox
+                +icon("internet explorer big")
+                | internet explorer11
+                +rating("yellow", "star", "3", "5")
+        div(class="title")
+            +icon("dropdown")
+            +icon("inverted red announcement")
+            | 機能一覧
+        div(class="content")
+            ul
+                li ログイン、ログアウト
+                li csv&excel出力（sheetJS）
+                li ajaxでの送受信
+                li DB接続
+                li DB種類の切替
+                li バリデーションチェック
+                li モーダル（semantic-UI）
+                li スマホ対応
+                li IE11対応
+    +form()
+    h4(class="ui dividing header") フィード
+    div(class="ui feed")
+        div(class="event")
+            div(class="label")
+                +img("default_person.png")
+            div(class="content")
+                div(class="summary")
+                    a(class="user") Elliot Fu
+                    |  added you as a friend
+                    div(class="date") 1時間前
+                div(class="meta")
+                    a(class="like")
+                        +rating("red", "heart", "0", "1")
+                        | 4 いいね
+        div(class="event")
+            div(class="label")
+                +img("default_person.png")
+            div(class="content")
+                div(class="summary")
+                    a(class="user") Helen Troy
+                    |  added
+                    a()  1 new illustrations
+                    div(class="date") 4日前
+                div(class="extra images")
+                    a()
+                        +img("cranberry.jpg")
+                div(class="meta")
+                    a(class="like")
+                        +rating("red", "heart", "0", "1")
+                        | 1 いいね
+block footer-contents
+
+
+

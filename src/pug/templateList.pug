@@ -1,0 +1,29 @@
+extends ./common/layout.pug
+
+block vars
+    - var Title = "一覧系テンプレート"
+    - var cssHref = "templateList.css"
+    - var jsSrc = "templateList.js"
+
+block main-contents
+    +form("")
+        div(class="ui two column stackable grid search")
+            div(class="six wide column field")
+                div(class="ui labeled input")
+                    label(class="ui label" for="RoleName") ロール名
+                    +inputText("RoleName")
+                    +button("SearchBtn", "teal")
+                        +icon("search")
+                        | 検索
+        div(class="ui horizontal divider")
+            +icon("search-hide-show angle up")
+        h4(class="ui dividing header") ロールマスタ
+        div(id="RoleMasterGrid" class="ag-theme-balham ag-grid")
+
+block footer-contents
+    div(class="ui item right")
+        +iconButton("NewRegistBtn", "positive", "edit", "新規登録")
+        +iconButton("DeleteBtn", "negative", "trash", "削除")
+
+
+

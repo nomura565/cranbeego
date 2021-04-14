@@ -1,0 +1,8 @@
+- var distDir = "/" + config.distDir + "/"
+- var jsDir = distDir + config.jsDir + "/"
+- var semanticDir = distDir + "semantic/dist/"
+script(src="/node_modules/jquery/dist/jquery.min.js")
+script(src=`${semanticDir}semantic.min.js`)
+script(src=`${semanticDir}components/checkbox.min.js`)
+- var src = jsDir + manifest[jsSrc]
+script(src=`${src}`)
