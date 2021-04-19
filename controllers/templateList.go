@@ -2,9 +2,12 @@ package controllers
 
 import (
 	"cranbeego/models"
+	"cranbeego/utils"
 	"cranbeego/viewmodels"
-	"github.com/astaxie/beego/orm"
 	"encoding/json"
+	"fmt"
+
+	"github.com/astaxie/beego/orm"
 )
 
 //TemplateListController comment
@@ -14,12 +17,16 @@ type TemplateListController struct {
 
 //Get comment
 func (c *TemplateListController) Get() {
-
+	logger := utils.NewLogger()
+	logger.Start()
 	c.TplName = "templateList.tpl"
+	logger.End()
 }
 
 //GetRoleMaster comment
 func (c *TemplateListController) GetRoleMaster() {
+	logger := utils.NewLogger()
+	logger.Start()
 	defer c.errorRecover()
 
 	var viewmodel = viewmodels.TemplateList{}
@@ -35,10 +42,13 @@ func (c *TemplateListController) GetRoleMaster() {
 	}
 
 	c.okDataReturn(roleList)
+	logger.End()
 }
 
 //DoDelete comment
 func (c *TemplateListController) DoDelete() {
+	logger := utils.NewLogger()
+	logger.Start()
 	defer c.errorRecover()
 
 	var viewmodel = viewmodels.TemplateList{}
@@ -54,6 +64,7 @@ func (c *TemplateListController) DoDelete() {
 	o := orm.NewOrm()
 	_, err := models.DoExecute(o, func(db orm.Ormer) (interface{}, error) {
 		for _, v := range viewmodel.RoleMasterGrid {
+			logger.Info(fmt.Sprintf("delete role RoleId:%d", v.RoleId))
 			err := models.DeleteRole(db, v.RoleId)
 			if err != nil {
 				return nil, err
@@ -69,4 +80,5 @@ func (c *TemplateListController) DoDelete() {
 	}
 
 	c.okReturn()
+	logger.End()
 }

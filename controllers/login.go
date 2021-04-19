@@ -1,13 +1,15 @@
 package controllers
 
 import (
-	"cranbeego/models"
-	"cranbeego/viewmodels"
 	"cranbeego/logics"
+	"cranbeego/models"
+	"cranbeego/utils"
+	"cranbeego/viewmodels"
 	"encoding/json"
-	"github.com/astaxie/beego/orm"
-	"net/http"
 	"fmt"
+	"net/http"
+
+	"github.com/astaxie/beego/orm"
 )
 
 //LoginController comment
@@ -17,12 +19,16 @@ type LoginController struct {
 
 //Get comment
 func (c *LoginController) Get() {
-
+	logger := utils.NewLogger()
+	logger.Start()
 	c.TplName = "login.tpl"
+	logger.End()
 }
 
 //DoLogin comment
 func (c *LoginController) DoLogin() {
+	logger := utils.NewLogger()
+	logger.Start()
 	defer c.errorRecover()
 	var viewmodel = viewmodels.Login{}
 	json.Unmarshal(c.Ctx.Input.RequestBody, &viewmodel)
@@ -53,17 +59,25 @@ func (c *LoginController) DoLogin() {
 		return
 	}
 
+	logger.Info(fmt.Sprintf("login user userId:%d", userInfo.UserId))
 	c.setUserInfo(userInfo)
 	c.okReturn()
+	logger.End()
 }
 
 //DoLogout comment
 func (c *LoginController) DoLogout() {
+	logger := utils.NewLogger()
+	logger.Start()
 	defer c.errorRecover()
-	c.deleteUserInfo()
-	c.DestroySession()
+	userInfo := c.getUserInfo()
+	if userInfo.UserId != 0 {
+		logger.Info(fmt.Sprintf("logout user userId:%d", userInfo.UserId))
+		c.deleteUserInfo()
+		c.DestroySession()
+	}
 	config, _ := models.NewConfig()
 	c.Redirect(config.RoutingURL["login"], http.StatusPermanentRedirect)
+	logger.End()
 	return
 }
-

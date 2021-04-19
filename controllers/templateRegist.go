@@ -3,11 +3,12 @@ package controllers
 import (
 	"cranbeego/logics"
 	"cranbeego/models"
-	"cranbeego/viewmodels"
 	"cranbeego/utils"
-	"github.com/astaxie/beego/orm"
+	"cranbeego/viewmodels"
 	"encoding/json"
 	"strconv"
+
+	"github.com/astaxie/beego/orm"
 )
 
 //TemplateRegistController comment
@@ -17,6 +18,8 @@ type TemplateRegistController struct {
 
 //Get comment
 func (c *TemplateRegistController) Get() {
+	logger := utils.NewLogger()
+	logger.Start()
 	c.TplName = "templateRegist.tpl"
 	id := c.GetString("id")
 	var viewmodel = viewmodels.TemplateRegist{}
@@ -34,16 +37,19 @@ func (c *TemplateRegistController) Get() {
 				return
 			}
 			c.Data["role"] = role
-		}else{
+		} else {
 			valid.SetError("GetRole", messages.E_014)
-				c.errorReturn(valid.Errors)
-				return
+			c.errorReturn(valid.Errors)
+			return
 		}
 	}
+	logger.End()
 }
 
 //DoRegist comment
 func (c *TemplateRegistController) DoRegist() {
+	logger := utils.NewLogger()
+	logger.Start()
 	defer c.errorRecover()
 	var viewmodel = viewmodels.TemplateRegist{}
 	json.Unmarshal(c.Ctx.Input.RequestBody, &viewmodel)
@@ -57,10 +63,10 @@ func (c *TemplateRegistController) DoRegist() {
 	}
 
 	model := new(models.RoleMaster)
-	model.RoleId=viewmodel.RoleId
-	model.RoleName=viewmodel.RoleName
-	model.RoleDescription=viewmodel.RoleDescription
-	model.RowVersion=viewmodel.RowVersion
+	model.RoleId = viewmodel.RoleId
+	model.RoleName = viewmodel.RoleName
+	model.RoleDescription = viewmodel.RoleDescription
+	model.RowVersion = viewmodel.RowVersion
 	model.CreatedUserId = c.getUserInfo().UserId
 	model.UpdatedUserId = model.CreatedUserId
 	model.CreatedDate = utils.GetNow()
@@ -74,4 +80,5 @@ func (c *TemplateRegistController) DoRegist() {
 	}
 
 	c.okDataReturn(model)
+	logger.End()
 }

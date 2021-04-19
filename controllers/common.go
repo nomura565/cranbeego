@@ -1,13 +1,15 @@
 package controllers
 
 import (
-	"errors"
-	"net/http"
 	"cranbeego/models"
+	"cranbeego/utils"
+	"encoding/json"
+	"errors"
+	_ "fmt"
+	"net/http"
+
 	"github.com/astaxie/beego"
 	"github.com/beego/beego/v2/core/validation"
-	_ "fmt"
-	"encoding/json"
 )
 
 //CommonController comment
@@ -17,9 +19,11 @@ type CommonController struct {
 }
 
 func (c *CommonController) ngReturn(err error) {
+	logger := utils.NewLogger()
+	logger.Panic(err.Error())
 	c.Data[c.getDataKey()] = map[string]interface{}{
-		"status":  "ng",
-		"data": err.Error(),
+		"status": "ng",
+		"data":   err.Error(),
 	}
 	if c.IsAjax() {
 		c.Ctx.Output.SetStatus(http.StatusBadRequest)
@@ -27,7 +31,7 @@ func (c *CommonController) ngReturn(err error) {
 	}
 }
 
-func (c *CommonController) getDataKey()(key string){
+func (c *CommonController) getDataKey() (key string) {
 	key = "modelErrors"
 	if c.IsAjax() {
 		key = "json"
@@ -35,34 +39,38 @@ func (c *CommonController) getDataKey()(key string){
 	return
 }
 
-func (c *CommonController) convertToJson(val interface{})(ret string){
+func (c *CommonController) convertToJson(val interface{}) (ret string) {
 	bytes, err := json.Marshal(val)
-    if err != nil {
-        return
-    }
+	if err != nil {
+		return
+	}
 	ret = string(bytes)
 	return
 }
 
 func (c *CommonController) errorReturn(errors []*validation.Error) {
-	data :=  make(map[string]string)
+	logger := utils.NewLogger()
+	logger.Start()
+	data := make(map[string]string)
 	//data["UserId"] = "akan"
 
 	for _, err := range errors {
 		data[err.Key] = err.Message
+		logger.Error(err.Message)
 	}
 	config, _ := models.NewConfig()
 	mapData := map[string]interface{}{
-		config.RequestParameter["isValid"]: false,
+		config.RequestParameter["isValid"]:           false,
 		config.RequestParameter["validationSummary"]: data,
 	}
 	if c.IsAjax() {
 		c.Data[c.getDataKey()] = mapData
 		c.Ctx.Output.SetStatus(http.StatusOK)
 		c.ServeJSON()
-	}else{
+	} else {
 		c.Data[c.getDataKey()] = c.convertToJson(mapData)
 	}
+	logger.End()
 }
 
 func (c *CommonController) okReturn() {
@@ -81,7 +89,7 @@ func (c *CommonController) okDataReturn(d interface{}) {
 	config, _ := models.NewConfig()
 	c.Data[c.getDataKey()] = map[string]interface{}{
 		config.RequestParameter["isValid"]: true,
-		config.RequestParameter["data"]: d,
+		config.RequestParameter["data"]:    d,
 	}
 
 	if c.IsAjax() {
@@ -91,14 +99,14 @@ func (c *CommonController) okDataReturn(d interface{}) {
 }
 
 //setUserInfo comment
-func (c *CommonController) setUserInfo(userInfo models.UserInfo){
+func (c *CommonController) setUserInfo(userInfo models.UserInfo) {
 	c.SetSession("user", userInfo)
 }
 
 //getUserInfo comment
-func (c *CommonController) getUserInfo() (userInfo models.UserInfo){
+func (c *CommonController) getUserInfo() (userInfo models.UserInfo) {
 	temp := c.GetSession("user")
-	if temp != nil{
+	if temp != nil {
 		userInfo = c.GetSession("user").(models.UserInfo)
 	}
 	return
@@ -128,6 +136,8 @@ func (c *CommonController) errorRecover() {
 
 //Prepare comment
 func (c *CommonController) Prepare() {
+	logger := utils.NewLogger()
+	logger.Start()
 	controller, _ := c.GetControllerAndAction()
 	if controller != beego.AppConfig.String("defaultController") {
 		c.userInfo = c.getUserInfo()
@@ -139,12 +149,12 @@ func (c *CommonController) Prepare() {
 				valid.SetError("NoSession", messages.E_012)
 				c.errorReturn(valid.Errors)
 				return
-			}else{
+			} else {
 				config, _ := models.NewConfig()
 				c.Redirect(config.RoutingURL["login"], http.StatusPermanentRedirect)
 				return
 			}
-		}else{
+		} else {
 			if c.userInfo.PhotoImage == "" {
 				c.userInfo.PhotoImage = "default_person.png"
 			}
@@ -153,4 +163,5 @@ func (c *CommonController) Prepare() {
 	}
 	config, _ := models.NewConfig()
 	c.Data["config"] = &config
+	logger.End()
 }
