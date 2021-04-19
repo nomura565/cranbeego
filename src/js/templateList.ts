@@ -4,6 +4,9 @@ import { CranberryCommon, CommonViewModel } from './cranberry-common';
 import { ButtonRenderer } from './components';
 const config = require('/conf/config.json');
 
+import "../css/common.scss";
+import "../css/templateList.scss";
+
 /**
  * 個別ビュークラス
  *

@@ -1,5 +1,7 @@
 import { AjaxOptions } from './ajax-options';
 import { CranberryCommon, CommonViewModel } from './cranberry-common';
+import "../css/common.scss";
+import "../css/login.scss";
 
 const config = require('/conf/config.json');
 

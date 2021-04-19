@@ -3,6 +3,9 @@ import { CranberryCommon, CommonViewModel } from './cranberry-common';
 
 const config = require('/conf/config.json');
 
+import "../css/common.scss";
+import "../css/top.scss";
+
 /**
  * 個別ビュークラス
  *
