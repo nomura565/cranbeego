@@ -3,10 +3,12 @@ package controllers
 import (
 	"cranbeego/models"
 	"cranbeego/utils"
+	"cranbeego/viewmodels"
 	"encoding/json"
 	"errors"
 	_ "fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/astaxie/beego"
 	"github.com/beego/beego/v2/core/validation"
@@ -151,7 +153,7 @@ func (c *CommonController) Prepare() {
 				return
 			} else {
 				config, _ := models.NewConfig()
-				c.Redirect(config.RoutingURL["login"], http.StatusPermanentRedirect)
+				c.Redirect(config.RoutingURL["login"], http.StatusFound)
 				return
 			}
 		} else {
@@ -159,9 +161,100 @@ func (c *CommonController) Prepare() {
 				c.userInfo.PhotoImage = "default_person.png"
 			}
 			c.Data["userInfo"] = &c.userInfo
+			c.Data["breadCrumbList"] = c.getBreadcrumbList()
+			//c.Data["breadCrumbListCount"] = len(c.getBreadcrumbList()) - 1
 		}
 	}
 	config, _ := models.NewConfig()
 	c.Data["config"] = &config
 	logger.End()
+}
+
+func (c *CommonController) ResetBreadcrumb() {
+	config, _ := models.NewConfig()
+	breadCrumb := new(models.BreadCrumb)
+	breadCrumb.Text = "トップ"
+	breadCrumb.Link = config.RoutingURL["top"]
+	breadCrumbList := make([]models.BreadCrumb, 0)
+	breadCrumbList = append(breadCrumbList, *breadCrumb)
+	c.setBreadcrumbList(breadCrumbList)
+}
+
+func (c *CommonController) AddBreadcrumb(text string, link string) {
+	linkUrl, err := url.ParseRequestURI(link)
+	if err == nil {
+		//ぱんくずリストのフラグをgetパラメータに上書きする
+		v := linkUrl.Query()
+		v.Set("bcl", "true")
+		linkUrl.RawQuery = v.Encode()
+		link = linkUrl.RequestURI()
+		//logger := utils.NewLogger()
+		//logger.Info("RequestURI:" + test.RequestURI())
+	}
+
+	breadCrumb := new(models.BreadCrumb)
+	breadCrumb.Text = text
+	breadCrumb.Link = link
+	breadCrumbList := c.getBreadcrumbList()
+	//breadCrumbList = append(breadCrumbList, *breadCrumb)
+	existFlg := false
+	newBreadCrumbList := make([]models.BreadCrumb, 0)
+	for _, bcl := range breadCrumbList {
+		if bcl.Text == breadCrumb.Text {
+			newBreadCrumbList = append(newBreadCrumbList, *breadCrumb)
+			existFlg = true
+		} else {
+			newBreadCrumbList = append(newBreadCrumbList, bcl)
+		}
+	}
+
+	if existFlg == false {
+		newBreadCrumbList = append(newBreadCrumbList, *breadCrumb)
+	}
+	c.setBreadcrumbList(newBreadCrumbList)
+	//c.Data["breadCrumbListCount"] = len(c.getBreadcrumbList()) - 1
+}
+
+//setBreadcrumb comment
+func (c *CommonController) setBreadcrumbList(breadCrumbList []models.BreadCrumb) {
+	c.SetSession("breadcrumbList", breadCrumbList)
+	c.Data["breadCrumbList"] = c.getBreadcrumbList()
+}
+
+//getBreadcrumb comment
+func (c *CommonController) getBreadcrumbList() (breadCrumbList []models.BreadCrumb) {
+	temp := c.GetSession("breadcrumbList")
+	if temp != nil {
+		breadCrumbList = c.GetSession("breadcrumbList").([]models.BreadCrumb)
+	} else {
+		c.ResetBreadcrumb()
+	}
+	return
+}
+
+//setBreadcrumbCondition comment
+func (c *CommonController) setBreadcrumbCondition(key string, value interface{}) {
+	c.SetSession("breadcrumbCondition_"+key, value)
+}
+
+//delBreadcrumbCondition comment
+func (c *CommonController) delBreadcrumbCondition(key string) {
+	c.DelSession("breadcrumbCondition_" + key)
+}
+
+//getBreadcrumbCondition comment
+func (c *CommonController) getBreadcrumbCondition(key string) (breadcrumbCondition interface{}) {
+	breadcrumbCondition = c.GetSession("breadcrumbCondition_" + key)
+	return
+}
+
+func (c *CommonController) ExistsBreadcrumbCondition(key string) (existsFlg bool, breadcrumbCondition interface{}) {
+	bcl := c.GetString("bcl")
+	if bcl != "true" {
+		c.delBreadcrumbCondition(key)
+	} else {
+		existsFlg = true
+		breadcrumbCondition = c.getBreadcrumbCondition(key).(viewmodels.TemplateList)
+	}
+	return
 }

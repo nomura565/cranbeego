@@ -20,12 +20,15 @@ type TemplateRegistController struct {
 func (c *TemplateRegistController) Get() {
 	logger := utils.NewLogger()
 	logger.Start()
+	config, _ := models.NewConfig()
+	bcText, bcLink := "登録系画面テンプレート", config.RoutingURL["templateRegist"]
 	c.TplName = "templateRegist.tpl"
 	id := c.GetString("id")
 	var viewmodel = viewmodels.TemplateRegist{}
 	valid := viewmodel.Valid()
 	messages, _ := models.NewMessages()
 	if id != "" {
+		bcLink = bcLink + "?id=" + id
 		roleId, err := strconv.Atoi(id)
 
 		if err == nil && roleId != 0 {
@@ -43,6 +46,8 @@ func (c *TemplateRegistController) Get() {
 			return
 		}
 	}
+
+	c.AddBreadcrumb(bcText, bcLink)
 	logger.End()
 }
 

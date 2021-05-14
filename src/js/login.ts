@@ -61,7 +61,7 @@ class Login extends CranberryCommon {
                 location.href = config.routingURL.top;
             };
 
-            this.submit(config.routingURL.doLogin, options);
+            this.submit(config.routingURL.loginDoLogin, options);
             return false;
         });
         //パスワードでエンター押下時ログインボタン押下とする

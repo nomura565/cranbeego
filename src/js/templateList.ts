@@ -121,7 +121,7 @@ class TemplateList extends CranberryCommon {
 	 * @returns プロミス
 	 */
     async GetRoleMaster(): Promise<any> {
-        return this.submitSetGrid("DoSearch", this.gridId, config.routingURL.getRoleMaster);
+        return this.submitSetGrid("DoSearch", this.gridId, config.routingURL.templateListGetRoleMaster);
     }
 }
 

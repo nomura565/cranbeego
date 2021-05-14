@@ -264,7 +264,7 @@ export class CranberryCommon {
         //ログアウトボタンクリックイベント
         $(this.model.LogoutBtn.id()).on("click", (event) => {
             this.startLoading();
-            location.href = config.routingURL.doLogout;
+            location.href = config.routingURL.loginDoLogout;
             return false;
         });
 

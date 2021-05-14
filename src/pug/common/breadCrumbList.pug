@@ -1,0 +1,12 @@
+| {{ if .breadCrumbList }}
+div(class="ui breadcrumb")
+    | {{range $i, $v := .breadCrumbList}}
+    //-| {{ if(ne .breadCrumbListCount $i) }}
+    a(href="{{$v.Link}}") {{$v.Text}}
+    div(class="divider")  / 
+    //-| {{else}}
+    //-div(class="active section") {{$v.Text}}
+    //-| {{end}}
+    | {{end}}
+div(class="ui divider")
+| {{end}}

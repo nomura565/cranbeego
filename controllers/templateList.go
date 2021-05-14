@@ -19,6 +19,15 @@ type TemplateListController struct {
 func (c *TemplateListController) Get() {
 	logger := utils.NewLogger()
 	logger.Start()
+	config, _ := models.NewConfig()
+	bcText, bcLink := "一覧系画面テンプレート", config.RoutingURL["templateList"]
+	c.AddBreadcrumb(bcText, bcLink)
+	var viewmodel = viewmodels.TemplateList{}
+	existsFlg, bcc := c.ExistsBreadcrumbCondition(bcLink)
+	if existsFlg == true {
+		viewmodel = bcc.(viewmodels.TemplateList)
+	}
+	c.Data["viewmodel"] = &viewmodel
 	c.TplName = "templateList.tpl"
 	logger.End()
 }
@@ -27,11 +36,13 @@ func (c *TemplateListController) Get() {
 func (c *TemplateListController) GetRoleMaster() {
 	logger := utils.NewLogger()
 	logger.Start()
+	config, _ := models.NewConfig()
 	defer c.errorRecover()
 
 	var viewmodel = viewmodels.TemplateList{}
 	valid := viewmodel.Valid()
 	json.Unmarshal(c.Ctx.Input.RequestBody, &viewmodel)
+	c.setBreadcrumbCondition(config.RoutingURL["templateList"], viewmodel)
 
 	o := orm.NewOrm()
 	roleList, _, err := models.GetRoleList(o, viewmodel.RoleName)

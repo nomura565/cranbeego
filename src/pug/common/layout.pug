@@ -41,6 +41,7 @@ html(lang='ja')
 
             div(class="ui main container")
                 include validationSummary.pug
+                include breadCrumbList.pug
                 block main-contents
                 +inputHidden("ModelErrors", "{{.modelErrors}}")
             div(class="ui bottom fixed menu fixed-footer")

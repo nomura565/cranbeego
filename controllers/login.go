@@ -77,7 +77,7 @@ func (c *LoginController) DoLogout() {
 		c.DestroySession()
 	}
 	config, _ := models.NewConfig()
-	c.Redirect(config.RoutingURL["login"], http.StatusPermanentRedirect)
+	c.Redirect(config.RoutingURL["login"], http.StatusFound)
 	logger.End()
 	return
 }

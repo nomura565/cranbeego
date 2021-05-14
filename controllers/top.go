@@ -13,6 +13,7 @@ type TopController struct {
 func (c *TopController) Get() {
 	logger := utils.NewLogger()
 	logger.Start()
+	c.ResetBreadcrumb()
 	c.TplName = "top.tpl"
 	logger.End()
 }

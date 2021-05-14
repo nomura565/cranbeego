@@ -25,11 +25,11 @@
   },
   "routingURL": {
     "login": "/Login",
-    "doLogout": "/Login/DoLogout",
-    "doLogin": "/Login/DoLogin",
+    "loginDoLogout": "/Login/DoLogout",
+    "loginDoLogin": "/Login/DoLogin",
     "top": "/Top",
     "templateList": "/TemplateList",
-    "getRoleMaster": "/TemplateList/GetRoleMaster",
+    "templateListGetRoleMaster": "/TemplateList/GetRoleMaster",
     "templateListDoDelete": "/TemplateList/DoDelete",
     "templateRegist": "/TemplateRegist",
     "templateRegistDoRegist": "/TemplateRegist/DoRegist"
