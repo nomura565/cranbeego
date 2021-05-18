@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	_ "fmt"
+	"html/template"
 	"net/http"
 	"net/url"
 	"strings"
@@ -142,13 +143,38 @@ func (c *CommonController) errorRecover() {
 func (c *CommonController) Prepare() {
 	logger := utils.NewLogger()
 	logger.Start()
+	messages, _ := models.NewMessages()
+	//logger.Info(c.Ctx.Request.Method)
+	//ajaxのCSRF対策 beegoに機能がなさそうだったので実装
+	enableXSRF, _ := beego.AppConfig.Bool("EnableXSRF")
+	if enableXSRF == true {
+		if c.IsAjax() && c.Ctx.Request.Method == "POST" {
+			//beegoの基本機能でajaxがエラーになるため一旦false
+			c.EnableXSRF = false
+			valid := validation.Validation{}
+			if c.Ctx.Request.Header["X-Csrf-Token"] != nil {
+				token := c.Ctx.Request.Header["X-Csrf-Token"][0]
+				logger.Info("postトークン:" + token)
+				logger.Info("サーバ保持トークン:" + c.XSRFToken())
+				if token != c.XSRFToken() {
+					logger.Error("CSRF")
+					valid.SetError("CSRF", messages.E_016)
+				}
+			} else {
+				valid.SetError("CSRF", messages.E_016)
+			}
+			if valid.HasErrors() {
+				c.errorReturn(valid.Errors)
+				return
+			}
+		}
+	}
 	controller, _ := c.GetControllerAndAction()
 	if controller != beego.AppConfig.String("defaultController") {
 		c.userInfo = c.getUserInfo()
 		if c.userInfo.UserId == 0 {
 			c.DestroySession()
 			if c.IsAjax() {
-				messages, _ := models.NewMessages()
 				valid := validation.Validation{}
 				valid.SetError("NoSession", messages.E_012)
 				c.errorReturn(valid.Errors)
@@ -159,19 +185,22 @@ func (c *CommonController) Prepare() {
 				return
 			}
 		} else {
-			role := []int32{}
-			for _, s := range c.userInfo.RoleMemberList {
-				role = append(role, s.RoleId)
-			}
-			o := orm.NewOrm()
-			controllerName, actionName := c.GetControllerNameAndActionName()
-			ret, _ := models.IsAllowAccessControl(o, controllerName, actionName, role)
+			enableAccessControl, _ := beego.AppConfig.Bool("EnableAccessControl")
+			if enableAccessControl == true {
+				role := []int32{}
+				for _, s := range c.userInfo.RoleMemberList {
+					role = append(role, s.RoleId)
+				}
+				o := orm.NewOrm()
+				controllerName, actionName := c.GetControllerNameAndActionName()
+				ret, _ := models.IsAllowAccessControl(o, controllerName, actionName, role)
 
-			if ret == false {
-				messages, _ := models.NewMessages()
-				err := errors.New(messages.E_015)
-				c.ngReturn(err)
-				return
+				if ret == false {
+					messages, _ := models.NewMessages()
+					err := errors.New(messages.E_015)
+					c.ngReturn(err)
+					return
+				}
 			}
 			if c.userInfo.PhotoImage == "" {
 				c.userInfo.PhotoImage = "default_person.png"
@@ -183,6 +212,7 @@ func (c *CommonController) Prepare() {
 	}
 	config, _ := models.NewConfig()
 	c.Data["config"] = &config
+	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	logger.End()
 }
 

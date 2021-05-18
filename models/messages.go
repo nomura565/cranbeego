@@ -25,6 +25,7 @@ type Messages struct {
 	E_013 string
 	E_014 string
 	E_015 string
+	E_016 string
 	I_000 string
 	I_001 string
 	I_002 string

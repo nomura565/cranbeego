@@ -26,6 +26,7 @@ String.prototype.id = function() {
  *
  */
 export class CommonViewModel {
+    CSRFKey: string        = "_xsrf";
     ValidationMode: string = "ValidationMode";
     LoginBtn: string       = "LoginBtn";
     LogoutBtn: string      = "LogoutBtn";
@@ -510,9 +511,9 @@ export class CranberryCommon {
         if (this.isUndefined(options.always)) options.always = always;
 
         return $.ajax({
-            //headers: {
-            //    "RequestVerificationToken": JSON.parse(data)["__RequestVerificationToken"]
-            //},
+            headers: {
+                "X-CSRF-Token": JSON.parse(data)[this.model.CSRFKey]
+            },
             url: url,
             type: options.type,
             contentType: options.contentType,
@@ -652,6 +653,7 @@ export class CranberryCommon {
         });
         //バリデーションモード
         inputValues[this.model.ValidationMode] = options.validationMode;
+        inputValues[this.model.CSRFKey] = $('input[name="'+this.model.CSRFKey+'"]').val();
         //inputValues[this.model.ModelErrors] = this.modelErrors;
 
         $.each(this.tmpKeys, (index, val) => {
