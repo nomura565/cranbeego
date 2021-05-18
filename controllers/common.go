@@ -9,8 +9,10 @@ import (
 	_ "fmt"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 	"github.com/beego/beego/v2/core/validation"
 )
 
@@ -157,6 +159,20 @@ func (c *CommonController) Prepare() {
 				return
 			}
 		} else {
+			role := []int32{}
+			for _, s := range c.userInfo.RoleMemberList {
+				role = append(role, s.RoleId)
+			}
+			o := orm.NewOrm()
+			controllerName, actionName := c.GetControllerNameAndActionName()
+			ret, _ := models.IsAllowAccessControl(o, controllerName, actionName, role)
+
+			if ret == false {
+				messages, _ := models.NewMessages()
+				err := errors.New(messages.E_015)
+				c.ngReturn(err)
+				return
+			}
 			if c.userInfo.PhotoImage == "" {
 				c.userInfo.PhotoImage = "default_person.png"
 			}
@@ -168,6 +184,13 @@ func (c *CommonController) Prepare() {
 	config, _ := models.NewConfig()
 	c.Data["config"] = &config
 	logger.End()
+}
+
+func (c *CommonController) GetControllerNameAndActionName() (controllerName string, actionName string) {
+	controller, action := c.GetControllerAndAction()
+	controllerName = strings.Replace(controller, "Controller", "", 1)
+	actionName = action
+	return
 }
 
 func (c *CommonController) ResetBreadcrumb() {

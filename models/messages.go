@@ -9,7 +9,7 @@ import (
 
 //Messages comment
 type Messages struct {
-	E_000   string
+	E_000 string
 	E_001 string
 	E_002 string
 	E_003 string
@@ -24,6 +24,7 @@ type Messages struct {
 	E_012 string
 	E_013 string
 	E_014 string
+	E_015 string
 	I_000 string
 	I_001 string
 	I_002 string
