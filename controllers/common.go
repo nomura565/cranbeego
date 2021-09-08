@@ -256,6 +256,7 @@ func (c *CommonController) AddBreadcrumb(text string, link string) {
 		if bcl.Text == breadCrumb.Text {
 			newBreadCrumbList = append(newBreadCrumbList, *breadCrumb)
 			existFlg = true
+			break
 		} else {
 			newBreadCrumbList = append(newBreadCrumbList, bcl)
 		}
