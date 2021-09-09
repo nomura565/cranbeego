@@ -71,6 +71,11 @@ class TemplateList extends CranberryCommon {
             this.startConfirmModal(modalOptions);
             return false;
         });
+        //excel出力ボタン
+        $(this.model.EXCELOutputBtn.id()).on("click", (event) => {
+            this.grid[this.gridId].exportDataAsExcel();
+            return false;
+        });
 
         return true;
     }
