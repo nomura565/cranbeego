@@ -110,9 +110,14 @@ func (c *CommonController) setUserInfo(userInfo models.UserInfo) {
 
 //getUserInfo comment
 func (c *CommonController) getUserInfo() (userInfo models.UserInfo) {
-	temp := c.GetSession("user")
-	if temp != nil {
-		userInfo = c.GetSession("user").(models.UserInfo)
+	enableLogin, _ := beego.AppConfig.Bool("EnableLogin")
+	if enableLogin == true {
+		temp := c.GetSession("user")
+		if temp != nil {
+			userInfo = c.GetSession("user").(models.UserInfo)
+		}
+	} else {
+		userInfo, _ = models.GetDefaultUser()
 	}
 	return
 }

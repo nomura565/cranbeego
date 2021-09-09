@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/astaxie/beego/orm"
 	"strings"
+
+	"github.com/astaxie/beego/orm"
 )
 
 //UserInfo comment
@@ -12,7 +13,13 @@ type UserInfo struct {
 	UserAttr
 	OrgMaster
 	RoleMemberList []RoleMemberList
-	RoleName string
+	RoleName       string
+}
+
+func GetDefaultUser() (userInfo UserInfo, err error) {
+	userInfo.UserId = 1
+	userInfo.UserName = "DefaultUser"
+	return
 }
 
 //GetUserInfo comment
@@ -22,7 +29,7 @@ func GetUserInfo(o orm.Ormer, userId int32) (userInfo UserInfo, err error) {
 	if err != nil {
 		return
 	}
-	userInfo.RoleMemberList, _ , err = SelectByUserId(o, userId)
+	userInfo.RoleMemberList, _, err = SelectByUserId(o, userId)
 
 	//GetNotAllowTargetListの実行 @todo
 	return
@@ -77,7 +84,7 @@ func SelectById(o orm.Ormer, userId int32) (userInfo UserInfo, err error) {
 
 	if err == nil && count != 0 {
 		userInfo = temp[0]
-	}else{
+	} else {
 		return
 	}
 
