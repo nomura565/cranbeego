@@ -26,7 +26,7 @@ block main-contents
             | 機能一覧
         div(class="content")
             ul
-                li ログイン、ログアウト
+                li ログイン、ログアウト（有効/無効切り替えあり）
                 li csv&excel出力（sheetJS）
                 li ajaxでの送受信（ag-grid含む）
                 li DB接続
@@ -35,9 +35,10 @@ block main-contents
                 li モーダル（semantic-UI）
                 li スマホ対応
                 li パンくずリスト
-                li CSRF対策
-                li ロールによる画面アクセスコントロール
+                li CSRF対策（有効/無効切り替えあり）
+                li ロールによる画面アクセスコントロール（有効/無効切り替えあり）
                 li ファイルアップロード（バックエンド未実装）
+                li ログ出力
     +form()
     h4(class="ui dividing header") フィード
     div(class="ui feed")
